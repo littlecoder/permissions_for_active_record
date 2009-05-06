@@ -11,14 +11,14 @@ module AddPermissions
         before_save :is_updateable?
         before_destroy :is_destroyable?
         
-        include Ubilabs::Has::Permissions::InstanceMethods
-        extend Ubilabs::Has::Permissions::SingletonMethods
+        include AddPermissions::Permissions::InstanceMethods
+        extend AddPermissions::Permissions::SingletonMethods
       end
     end
 
     module InstanceMethods
-      def active_user
-        ActiveRecord::Base.active_user
+      def acting_user
+        ActiveRecord::Base.acting_user
       end
       
       def is_creatable?
@@ -46,14 +46,14 @@ module AddPermissions
   module AR
     module Base
 
-      @@active_user = nil
+      @@acting_user = nil
 
-      def active_user= user
-        @@active_user = user
+      def acting_user= user
+        @@acting_user = user
       end
 
-      def active_user
-        @@active_user
+      def acting_user
+        @@acting_user
       end
 
     end
@@ -63,7 +63,7 @@ module AddPermissions
     module Base
       
       def pass_current_user
-        ActiveRecord::Base.active_user = current_user
+        ActiveRecord::Base.acting_user = current_user
       end
             
     end
