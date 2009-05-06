@@ -1,13 +1,59 @@
 PermissionsForActiveRecord
 ==========================
 
-Introduction goes here.
+This plugin adds a simple permission system to specified ActiveRecords. This plugin is based on technoweenie's restful-authentication.
+
+This plugin is inspired by hobo's permission system.
+
+The method "current_user" generated be restful-authentication is passed to the ActiveRecord an can be used to determine id a ActiveRecord can be created, udpated, viewed or destroyed.
+
+
+Setup
+=====
+
+You have to install restful-authentication first.
+Add this line after the setup of restful-authentication:
+
+before_filter :pass_current_user
+
+This line will propagate the current_user as acting_user in all ActiveRecords, where the permission system is activated.
+
+
+To use the permission system add the following line to an ActiveRecord:
+
+add_permissions
+
+Now you can implement the methods
+is_creatable?, is_updateable?, is_viewable? and is_destroyable? in the ActiveRecord. If you return false the active_record cannot created, updated, viewed or destroyed. Corresponding before_filters will be called.
+
+Note: is_viewable is not used yet.
 
 
 Example
 =======
 
-Example goes here.
+Let's say the ActiveRecord User is used for restful-authentication and stores all user data.
+We want Posts only to be updated and destroyed by their owner and to be created only by a logged-in user:
+
+class Post < ActiveRecord::Base
+
+  belongs_to :owner, :class_name => 'User'
+
+  has_permissions
+
+  def is_creatable?
+    acting_user != :false
+  end
+
+  def is_editable?
+	acting_user != :false and acting_user.id == owner.id
+  end
+
+  def is_destroyable?
+	acting_user != :false and acting_user.id == owner.id
+  end
+
+end
 
 
-Copyright (c) 2009 [name of plugin creator], released under the MIT license
+Copyright (c) 2009 [Malte Büchmann], released under the MIT license
