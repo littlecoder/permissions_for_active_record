@@ -24,9 +24,9 @@ To use the permission system add the following line to an ActiveRecord:
 add_permissions
 
 Now you can implement the methods
-is_creatable?, is_updateable?, is_viewable? and is_destroyable? in the ActiveRecord. If you return false the active_record cannot created, updated, viewed or destroyed. Corresponding before_filters will be called.
+creatable?, updateable?, viewable? and destroyable? in the ActiveRecord. If you return false the active_record cannot created, updated, viewed or destroyed. Corresponding before_filters will be called.
 
-Note: is_viewable is not used yet.
+Note: viewable? is not used yet.
 
 
 Example
@@ -41,15 +41,15 @@ class Post < ActiveRecord::Base
 
   has_permissions
 
-  def is_creatable?
+  def creatable?
     acting_user != :false
   end
 
-  def is_editable?
+  def editable?
 	acting_user != :false and acting_user.id == owner.id
   end
 
-  def is_destroyable?
+  def destroyable?
 	acting_user != :false and acting_user.id == owner.id
   end
 

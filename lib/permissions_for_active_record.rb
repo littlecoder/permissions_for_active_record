@@ -7,9 +7,9 @@ module AddPermissions
 
     module ClassMethods
       def add_permissions
-        before_create :is_creatable?
-        before_save :is_updateable?
-        before_destroy :is_destroyable?
+        before_create :creatable?
+        before_save :updateable?
+        before_destroy :destroyable?
         
         include AddPermissions::Permissions::InstanceMethods
         extend AddPermissions::Permissions::SingletonMethods
@@ -21,19 +21,19 @@ module AddPermissions
         ActiveRecord::Base.acting_user
       end
       
-      def is_creatable?
+      def creatable?
         true
       end
         
-      def is_updateable?
+      def updateable?
         true
       end
         
-      def is_viewable?
+      def viewable? field
         true
       end
         
-      def is_destroyable?
+      def destroyable?
         true
       end
     end
