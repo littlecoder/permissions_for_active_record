@@ -56,4 +56,10 @@ class Post < ActiveRecord::Base
 end
 
 
+Tests
+=====
+
+The SQLite3-Adapter is required for tests.
+
+
 Copyright (c) 2009 [Malte Büchmann], released under the MIT license
