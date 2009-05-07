@@ -57,7 +57,7 @@ class Post < ActiveRecord::Base
 end
 
 
-To filer the field automatically in the view use the view_for helper:
+To filter the field automatically in the view use the view_for helper:
 
 <% view_for @post |o| -%>
   <h1><%= o.title %></h1>
