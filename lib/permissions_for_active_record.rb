@@ -17,6 +17,7 @@ module AddPermissions
     end
 
     module InstanceMethods
+      
       def acting_user
         ActiveRecord::Base.acting_user
       end
@@ -36,6 +37,17 @@ module AddPermissions
       def destroyable?
         true
       end
+      
+      def view field
+        if field.is_a?(Symbol) and viewable? field
+          if block_given?
+            yield self[field]
+          else
+            self[field]
+          end
+        end
+      end
+      
     end
 
     module SingletonMethods

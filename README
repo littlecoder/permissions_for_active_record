@@ -1,11 +1,9 @@
 PermissionsForActiveRecord
 ==========================
 
-This plugin adds a simple permission system to specified ActiveRecords. This plugin is based on technoweenie's restful-authentication.
+This plugin adds a simple permission system to specified ActiveRecords and a helper method to easily blend-in/blend-out certain parts of a view based upon view-permissions on single methods. It is based on technoweenie's restful-authentication and is inspired by hobo's permission system.
 
-This plugin is inspired by hobo's permission system.
-
-The method "current_user" generated be restful-authentication is passed to the ActiveRecord an can be used to determine id a ActiveRecord can be created, udpated, viewed or destroyed.
+The method "current_user" generated be restful-authentication is passed to the ActiveRecord and can be used to determine if a ActiveRecord can be created, udpated, viewed or destroyed.
 
 
 Setup
@@ -26,14 +24,13 @@ add_permissions
 Now you can implement the methods
 creatable?, updateable?, viewable? and destroyable? in the ActiveRecord. If you return false the active_record cannot created, updated, viewed or destroyed. Corresponding before_filters will be called.
 
-Note: viewable? is not used yet.
-
 
 Example
 =======
 
 Let's say the ActiveRecord User is used for restful-authentication and stores all user data.
-We want Posts only to be updated and destroyed by their owner and to be created only by a logged-in user:
+We want Posts only to be updated and destroyed by their owner and to be created only by a logged-in user.
+We also want the internal_comment only be viewable by the author.
 
 class Post < ActiveRecord::Base
 
@@ -53,13 +50,29 @@ class Post < ActiveRecord::Base
 	acting_user != :false and acting_user.id == owner.id
   end
 
+  def viewable? field
+	field != :internal_comment or owner.id == acting_user.id
+  end
+
 end
+
+
+To filer the field automatically in the view use the view_for helper:
+
+<% view_for @post |o| -%>
+  <h1><%= o.title %></h1>
+  <p><%= o.text %></p>
+  <% o.internal_comment do |a| -%>
+    <h2>Your Internal Comment</h2>
+    <p><%= a %></p>
+  <% end %>
+<% end -%>
 
 
 Tests
 =====
 
-The SQLite3-Adapter is required for tests.
+The SQLite3-Adapter is required for the tests.
 
 
 Copyright (c) 2009 [Malte Büchmann], released under the MIT license
