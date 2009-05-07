@@ -10,7 +10,7 @@ Setup
 =====
 
 You have to install restful-authentication first.
-Add this line after the setup of restful-authentication:
+Add this line after the setup of restful-authentication in ApplicationController:
 
 before_filter :pass_current_user
 
