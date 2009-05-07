@@ -22,7 +22,7 @@ To use the permission system add the following line to an ActiveRecord:
 add_permissions
 
 Now you can implement the methods
-creatable?, updateable?, viewable? and destroyable? in the ActiveRecord. If you return false the active_record cannot created, updated, viewed or destroyed. Corresponding before_filters will be called.
+creatable?, updateable?, viewable? and destroyable? in the ActiveRecord. If you return false the active_record cannot be created, updated, viewed or destroyed. Corresponding before_filters are called.
 
 
 Example
