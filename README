@@ -1,7 +1,7 @@
 PermissionsForActiveRecord
 ==========================
 
-This plugin adds a simple permission system to specified ActiveRecords and a helper method to easily blend-in/blend-out certain parts of a view based upon view-permissions on single methods. It is based on technoweenie's restful-authentication and is inspired by hobo's permission system.
+This plugin adds a simple permission system to specified ActiveRecords and a helper method to easily blend-in/blend-out certain parts of a view based upon view-permissions on single methods. Methods can be made updateable or locked from being updated. This works also with associated ActiveRecords. It is based on technoweenie's restful-authentication and is inspired by hobo's permission system.
 
 The method "current_user" generated be restful-authentication is passed to the ActiveRecord and can be used to determine if a ActiveRecord can be created, udpated, viewed or destroyed.
 
@@ -17,7 +17,7 @@ before_filter :pass_current_user
 This line will propagate the current_user as acting_user in all ActiveRecords, where the permission system is activated.
 
 
-To use the permission system add the following line to an ActiveRecord:
+To use the permission system add the following line to an ActiveRecord. This line must be inderted after all association definitions:
 
 add_permissions
 
@@ -42,7 +42,7 @@ class Post < ActiveRecord::Base
     acting_user != :false
   end
 
-  def editable?
+  def updateable? field=nil
 	acting_user != :false and acting_user.id == owner.id
   end
 
@@ -50,7 +50,7 @@ class Post < ActiveRecord::Base
 	acting_user != :false and acting_user.id == owner.id
   end
 
-  def viewable? field
+  def viewable? field=nil
 	field != :internal_comment or owner.id == acting_user.id
   end
 
@@ -59,12 +59,12 @@ end
 
 To filter the field automatically in the view use the view_for helper:
 
-<% view_for @post |o| -%>
-  <h1><%= o.title %></h1>
-  <p><%= o.text %></p>
-  <% o.internal_comment do |a| -%>
+<% view_for @post |p| -%>
+  <h1><%= p.title %></h1>
+  <p><%= p.text %></p>
+  <% p.internal_comment do |ic| -%>
     <h2>Your Internal Comment</h2>
-    <p><%= a %></p>
+    <p><%= ic %></p>
   <% end %>
 <% end -%>
 
